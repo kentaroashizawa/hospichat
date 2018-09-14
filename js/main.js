@@ -546,7 +546,19 @@ $("#login-form").submit(function() {
       return false;
     }
 
-    // TODO: ルーム作成処理
+      // ルーム作成処理
+      // priorityを2にすることで初期ルーム（priority=1）より順番的に後になる
+      firebase.database().ref("rooms/" + roomName).setWithPriority({
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        createdByUID: currentUID,
+      }, 2)
+      .then(function() {
+        // ルーム作成に成功した場合の処理
+        
+      })
+      .catch(function(error) {
+        console.error("ルーム作成に失敗:", error);
+      });
 
     // TODO: ルーム作成に成功した場合は以下2つの処理を実行する
     // モーダルを非表示にする
@@ -561,6 +573,12 @@ $("#login-form").submit(function() {
   /**
    * ルーム削除関連
    */
+   
+   // roomを削除
+firebase.database().ref("rooms/" + roomName).remove();
+// room内のメッセージも削除
+firebase.database().ref("messages/"+ roomMessaage).remove();
+
 
   $("#deleteRoomModal").on("show.bs.modal", function(event) {
     // ルーム削除のモーダル表示直前に実行する処理
@@ -580,7 +598,7 @@ $("#login-form").submit(function() {
     // ハンバーガーメニューが開いている場合は閉じる
     $("#navbar").collapse("hide");
   });
-
+  
   // ルーム削除ボタンクリックでルームを削除する
   $(".delete-room__button").click(function() {
     deleteRoom(currentRoomName);
