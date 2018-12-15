@@ -339,10 +339,11 @@ function deleteRoom(roomName) {
   }
 
   // TODO: ルームを削除
-
+  firebase.database().ref("rooms/" + roomName).remove();
   // TODO: ルーム内のメッセージも削除
-
+  firebase.database().ref("messages/"+ roomName).remove();
   // TODO: 初期ルームに移動
+  showRoom(defaultRoomName);
 }
 
 
@@ -491,9 +492,9 @@ $("#login-form").submit(function() {
       text: comment,
       time: firebase.database.ServerValue.TIMESTAMP,
     };
-    firebase.database().ref().child("messages/" + currentRoomName).push(message);
-    // TODO: メッセージを投稿する
 
+    // TODO: メッセージを投稿する
+    firebase.database().ref().child("messages/" + currentRoomName).push(message);
 
     return false;
   });
@@ -574,10 +575,10 @@ $("#login-form").submit(function() {
    * ルーム削除関連
    */
    
-   // roomを削除
-firebase.database().ref("rooms/" + roomName).remove();
-// room内のメッセージも削除
-firebase.database().ref("messages/"+ roomMessaage).remove();
+//   // roomを削除
+// firebase.database().ref("rooms/" + roomName).remove();
+// // room内のメッセージも削除
+// firebase.database().ref("messages/"+ roomMessaage).remove();
 
 
   $("#deleteRoomModal").on("show.bs.modal", function(event) {
@@ -602,6 +603,7 @@ firebase.database().ref("messages/"+ roomMessaage).remove();
   // ルーム削除ボタンクリックでルームを削除する
   $(".delete-room__button").click(function() {
     deleteRoom(currentRoomName);
+    console.log("hello");
     $("#deleteRoomModal").modal("toggle");
   });
 
